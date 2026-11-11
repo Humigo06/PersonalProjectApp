@@ -13,6 +13,7 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
 
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
     # Database configuration
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
         "DATABASE_URL"
@@ -26,6 +27,10 @@ def create_app():
 
     # Import models so Flask-Migrate can discover them
     from . import models
+
+    # Register authentication routes
+    from . import auth
+    app.register_blueprint(auth.auth)
 
     @app.route("/")
     def home():

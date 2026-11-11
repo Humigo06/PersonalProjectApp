@@ -53,7 +53,14 @@ class Project(db.Model):
     status = db.Column(db.String(20), default="idea", nullable=False)
 
     user_id = db.Column(
-        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"),
+        db.Integer, 
+        db.ForeignKey("user.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    collection_id = db.Column(
+        db.Integer,
+        db.ForeignKey("collection.id", ondelete="RESTRICT"),
         nullable=False
     )
 
