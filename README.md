@@ -10,3 +10,6 @@ This app is a personal project manager. Unlike the many project trackers that en
 - Database: PostgreSQL
 - Deployment: Google Cloud Run
 - Additional tools: LLMs for code assistance
+
+## AI Usage
+AI was used to write the Dockerfile, compose.yaml, among the other files used for inital set up. The database tables in models.py were created with AI guidance as well.
