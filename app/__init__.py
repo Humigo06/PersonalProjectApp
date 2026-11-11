@@ -28,14 +28,5 @@ def create_app():
     def home():
         return "Project Tracker is running!"
 
-    @app.route("/test-db")
-    def test_db():
-        from .models import TestEntry
-
-        entry = TestEntry(message="Database connection successful!")
-        db.session.add(entry)
-        db.session.commit()
-
-        return f"Saved to database: {entry.message}"
 
     return app
