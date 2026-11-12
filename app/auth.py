@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
 
 from . import db
@@ -52,6 +52,31 @@ def register():
         return redirect(url_for("auth.library"))
 
     return render_template("register.html")
+
+@auth.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        user = User.query.filter_by(username=username).first()
+
+        if user is None or not user.check_password(password):
+            flash("Invalid username or password.", "error")
+            return redirect(url_for("auth.login"))
+
+        login_user(user)
+
+        return redirect(url_for("auth.library"))
+
+    return render_template("login.html")
+
+@auth.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
+    return redirect(url_for("auth.login"))
 
 @auth.route("/library")
 @login_required
