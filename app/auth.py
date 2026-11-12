@@ -49,6 +49,8 @@ def register():
         # Log in the newly registed user
         login_user(user)
 
+        flash("Your account was created successfully!", "success")
+
         return redirect(url_for("auth.library"))
 
     return render_template("register.html")
