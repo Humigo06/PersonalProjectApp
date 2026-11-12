@@ -3,7 +3,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
 
 from . import db
-from .models import User, Collection
+from .models import User, Collection, Project
 
 
 auth = Blueprint("auth",__name__)
@@ -81,4 +81,16 @@ def logout():
 @auth.route("/library")
 @login_required
 def library():
-    return f"Welcome, {current_user.username}!"
+    projects = Project.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    collections = Collection.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    return render_template(
+        "library.html",
+        projects=projects,
+        collections=collections
+    )
