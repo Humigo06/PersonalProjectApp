@@ -221,3 +221,16 @@ def edit_project(project_id):
         project=project,
         collections=collections
     )
+
+@auth.route("/projects/<int:project_id>/delete", methods=["POST"])
+@login_required
+def delete_project(project_id):
+    project = Project.query.filter_by(
+        id=project_id, user_id=current_user.id
+    ).first_or_404()
+
+    db.session.delete(project)
+    db.session.commit()
+
+    flash("Project deleted successfully!", "success")
+    return redirect(url_for("auth.library"))
