@@ -146,3 +146,16 @@ def create_project():
         "create_project.html",
         collections=collections
     )
+
+@auth.route("/projects/<int:project_id>")
+@login_required
+def project_detail(project_id):
+    project = Project.query.filter_by(
+        id=project_id,
+        user_id=current_user.id
+    ).first_or404()
+
+    return render_template(
+        "project_detail.html",
+        project=project
+    )
