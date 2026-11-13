@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
 
@@ -85,7 +85,7 @@ def logout():
 def library():
     projects = Project.query.filter_by(
         user_id=current_user.id
-    ).all()
+    ).order_by(Project.name.asc()).all()
 
     collections = Collection.query.filter_by(
         user_id=current_user.id
@@ -96,3 +96,176 @@ def library():
         projects=projects,
         collections=collections
     )
+
+@auth.route("/projects/new", methods=["GET", "POST"])
+@login_required
+def create_project():
+    collections = Collection.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        collection_id = request.form.get("collection_id", type=int)
+        status = request.form.get("status")
+
+        if not name:
+            flash("Project name is required.", "error")
+            return redirect(url_for("auth.create_project"))
+
+        collection = Collection.query.filter_by(
+            id=collection_id,
+            user_id=current_user.id
+        ).first()
+
+        if collection is None:
+            abort(404)
+
+        valid_statuses = ["idea", "active", "paused", "completed"]
+
+        if status not in valid_statuses:
+            flash("Please select a valid project status.", "error")
+            return redirect(url_for("auth.create_project"))
+
+        project = Project(
+            name=name,
+            description=description or None,
+            status=status,
+            user_id=current_user.id,
+            collection_id=collection.id
+        )
+
+        db.session.add(project)
+        db. session.commit()
+
+        flash("Project created successfully!", "success")
+        return redirect(url_for("auth.library"))
+
+    return render_template(
+        "create_project.html",
+        collections=collections
+    )
+
+@auth.route("/projects/<int:project_id>")
+@login_required
+def project_detail(project_id):
+    project = Project.query.filter_by(
+        id=project_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    return render_template(
+        "project_detail.html",
+        project=project
+    )
+
+@auth.route("/projects/<int:project_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_project(project_id):
+    project = Project.query.filter_by(
+        id=project_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    collections = Collection.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        collection_id = request.form.get("collection_id", type=int)
+        status = request.form.get("status")
+
+        if not name:
+            flash("Project name is required.", "error")
+            return redirect(url_for(
+                "auth.edit_project",
+                project_id=project.id
+            ))
+
+        collection= Collection.query.filter_by(
+            id=collection_id,
+            user_id=current_user.id
+        ).first()
+
+        if collection is None:
+            abort(404)
+
+        valid_statuses = ["idea", "active", "paused","completed"]
+
+        if status not in valid_statuses:
+            flash("Please select a valid project status.", "error")
+            return redirect(url_for(
+                "auth.edit_project",
+                project_id=project.id
+            ))
+
+        project.name = name
+        project.description = description or None
+        project.collection_id = collection.id
+        project.status = status
+
+        db.session.commit()
+
+        flash("Project updated successfully!", "success")
+
+        return redirect(url_for(
+            "auth.project_detail",
+            project_id=project.id
+        ))
+
+    return render_template(
+        "edit_project.html",
+        project=project,
+        collections=collections
+    )
+
+@auth.route("/projects/<int:project_id>/delete", methods=["POST"])
+@login_required
+def delete_project(project_id):
+    project = Project.query.filter_by(
+        id=project_id, user_id=current_user.id
+    ).first_or_404()
+
+    db.session.delete(project)
+    db.session.commit()
+
+    flash("Project deleted successfully!", "success")
+    return redirect(url_for("auth.library"))
+
+@auth.route("/collections/new", methods=["GET", "POST"])
+@login_required
+def create_collection():
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+
+        if not name:
+            flash("Collection name is required", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        if len(name) > 100:
+            flash("Collection names cannot exceed 100 characters.", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        existing = Collection.query.filter_by(
+            user_id=current_user.id, name=name
+        ).first()
+
+        if existing:
+            flash("You already have a collection with that name.", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        collection = Collection(
+            name=name,
+            user_id=current_user.id
+        )
+
+        db.session.add(collection)
+        db.session.commit()
+
+        flash("Collection created successfully!", "success")
+        return redirect(url_for("auth.library"))
+
+    return render_template("create_collection.html")
