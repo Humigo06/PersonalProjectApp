@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project.name }} - Project Tracker</title>
+</head>
+<body>
+    <p>
+        <a href="{{ url_for('auth.library') }}">Back to Library</a>
+    </p>
+
+    <h1>{{ project.name }}</h1>
+
+    <p>
+        <strong>Collection:</strong> {{ project.collection.name }}
+    </p>
+
+    {% if project.description %}
+        <h2>Description</h2>
+        <p>{{ project.description }}</p>
+    {% else %}
+        <p>No description provided.</p>
+    {% endif %}
+    
+</body>
+</html>
