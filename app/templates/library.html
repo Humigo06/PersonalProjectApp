@@ -29,6 +29,12 @@
                 <a href="{{ url_for('auth.edit_collection', collection_id=collection.id) }}">
                     Rename Collection
                 </a>
+
+                <form method="POST"
+                    action="{{ url_for('auth.delete_collection', collection_id=collection.id) }}"
+                    onsubmit="return confirm('Are you sure you want to delete this collection?');">
+                    <button type="submit">Delete Collection</button>
+                </form>
             {% endif %}
 
             {% set collection_projects = projects
