@@ -310,3 +310,28 @@ def edit_collection(collection_id):
         return redirect(url_for("auth.library"))
 
     return render_template("edit_collection.html", collection=collection)
+
+@auth.route("/collections/<int:collection_id>/delete", methods=["POST"])
+@login_required
+def delete_collection(collection_id):
+    collection = Collection.query.filter_by(
+        id=collection_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    if collection.is_default:
+        flash("The default collection cannot be deleted.", "error")
+        return redirect(url_for("auth.library"))
+
+    if collection.projects:
+        flash(
+            "This collection conatins projects. Move or delete them before deleting the collection.",
+            "error"
+        )
+        return redirect(url_for("auth.library"))
+
+    db.session.delete(collection)
+    db.session.commit()
+
+    flash("Collection deleted successfully!", "success")
+    return redirect(url_for("auth.library"))
