@@ -85,7 +85,7 @@ def logout():
 def library():
     projects = Project.query.filter_by(
         user_id=current_user.id
-    ).all()
+    ).order_by(Project.name.asc()).all()
 
     collections = Collection.query.filter_by(
         user_id=current_user.id
