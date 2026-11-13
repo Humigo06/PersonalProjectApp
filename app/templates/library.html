@@ -25,6 +25,12 @@
         <section>
             <h2>{{ collection.name }}</h2>
 
+            {% if not collection.is_default %}
+                <a href="{{ url_for('auth.edit_collection', collection_id=collection.id) }}">
+                    Rename Collection
+                </a>
+            {% endif %}
+
             {% set collection_projects = projects
                 | selectattr("collection_id", "equalto", collection.id)
                 | list %}
