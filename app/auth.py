@@ -234,3 +234,38 @@ def delete_project(project_id):
 
     flash("Project deleted successfully!", "success")
     return redirect(url_for("auth.library"))
+
+@auth.route("/collections/new", methods=["GET", "POST"])
+@login_required
+def create_collection():
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+
+        if not name:
+            flash("Collection name is required", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        if len(name) > 100:
+            flash("Collection names cannot exceed 100 characters.", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        existing = Collection.query.filter_by(
+            user_id=current_user.id, name=name
+        ).first()
+
+        if existing:
+            flash("You already have a collection with that name.", "error")
+            return redirect(url_for("auth.create_collection"))
+
+        collection = Collection(
+            name=name,
+            user_id=current_user.id
+        )
+
+        db.session.add(collection)
+        db.session.commit()
+
+        flash("Collection created successfully!", "success")
+        return redirect(url_for("auth.library"))
+
+    return render_template("create_collection.html")
