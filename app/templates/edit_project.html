@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit {{ project.name }} - Project Tracker</title>
+</head>
+<body>
+    <h1>Edit Project</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="name">Project Name:</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ project.name }}"
+            required
+        >
+
+        <br><br>
+
+        <label for="description">Description:</label>
+        <textarea
+            id="description"
+            name="description"
+        >{{ project.description or '' }}</textarea>
+    
+        <br><br>
+
+        <label for="collection_id">Collection:</label>
+        <select id="collection_id" name="collection_id" required>
+            {% for collection in collections %}
+                <option
+                    value="{{ collection.id }}"
+                    {% if collection.id == project.collection_id %}
+                        selected
+                    {% endif %}
+                >
+                    {{ collection.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+            <option value="idea"
+                {% if project.status == "idea" %}selected{% endif %}>
+                Idea
+            </option>
+
+            <option value="active"
+                {% if project.status == "active" %}selected{% endif %}>
+                Active
+            </option>
+
+            <option value="paused"
+                {% if project.status == "paused" %}selected{% endif %}>
+                Paused
+            </option>
+
+            <option value="completed"
+                {% if project.status == "completed" %}selected{% endif %}>
+                Completed
+            </option>
+        </select>
+        
+        <br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <p>
+        <a href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+            Cancel
+        </a>
+    </p>
+</body>
+</html>

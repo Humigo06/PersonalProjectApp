@@ -10,6 +10,10 @@
         <a href="{{ url_for('auth.library') }}">Back to Library</a>
     </p>
 
+    <a href="{{ url_for('auth.edit_project', project_id=project.id) }}">
+        Edit Project
+    </a>
+
     <h1>{{ project.name }}</h1>
 
     <p>
@@ -22,6 +26,6 @@
     {% else %}
         <p>No description provided.</p>
     {% endif %}
-    
+
 </body>
 </html>
