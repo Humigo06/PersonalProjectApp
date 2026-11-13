@@ -153,7 +153,7 @@ def project_detail(project_id):
     project = Project.query.filter_by(
         id=project_id,
         user_id=current_user.id
-    ).first_or404()
+    ).first_or_404()
 
     return render_template(
         "project_detail.html",

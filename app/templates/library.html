@@ -31,8 +31,11 @@
                 <ul>
                     {% for project in collection_projects %}
                         <li>
-                            <strong>{{ project.name }}</strong>
-                            <span>({{ project.status }})</span>
+                            <a href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+                                <strong>{{ project.name }}</strong>
+                            </a>
+
+                            <span>({{ project.status | title }})</span>
 
                             {% if project.description %}
                                 <p>{{ project.description }}</p>
