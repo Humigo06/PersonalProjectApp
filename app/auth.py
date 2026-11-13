@@ -159,3 +159,65 @@ def project_detail(project_id):
         "project_detail.html",
         project=project
     )
+
+@auth.route("/projects/<int:project_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_project(project_id):
+    project = Project.query.filter_by(
+        id=project_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    collections = Collection.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        collection_id = request.form.get("collection_id", type=int)
+        status = request.form.get("status")
+
+        if not name:
+            flash("Project name is required.", "error")
+            return redirect(url_for(
+                "auth.edit_project",
+                project_id=project.id
+            ))
+
+        collection= Collection.query.filter_by(
+            id=collection_id,
+            user_id=current_user.id
+        ).first()
+
+        if collection is None:
+            abort(404)
+
+        valid_statuses = ["idea", "active", "paused","completed"]
+
+        if status not in valid_statuses:
+            flash("Please select a valid project status.", "error")
+            return redirect(url_for(
+                "auth.edit_project",
+                project_id=project.id
+            ))
+
+        project.name = name
+        project.description = description or None
+        project.collection_id = collection.id
+        project.status = status
+
+        db.session.commit()
+
+        flash("Project updated successfully!", "success")
+
+        return redirect(url_for(
+            "auth.project_detail",
+            project_id=project.id
+        ))
+
+    return render_template(
+        "edit_project.html",
+        project=project,
+        collections=collections
+    )
