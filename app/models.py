@@ -1,10 +1,12 @@
 from . import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # class TestEntry(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     message = db.Column(db.String(100), nullable=False)
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
@@ -19,6 +21,13 @@ class User(db.Model):
         "Project", back_populates="user",
         cascade="all, delete-orphan"
     )
+
+    # Methods
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 class Collection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +53,14 @@ class Project(db.Model):
     status = db.Column(db.String(20), default="idea", nullable=False)
 
     user_id = db.Column(
-        db.Integer, db.ForeignKey("user.id", ondelete="CASCADE"),
+        db.Integer, 
+        db.ForeignKey("user.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    collection_id = db.Column(
+        db.Integer,
+        db.ForeignKey("collection.id", ondelete="RESTRICT"),
         nullable=False
     )
 
