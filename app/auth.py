@@ -100,14 +100,14 @@ def library():
 @auth.route("/projects/new", methods=["GET", "POST"])
 @login_required
 def create_project():
-    collections = Collection.querry.filter_by(
+    collections = Collection.query.filter_by(
         user_id=current_user.id
     ).all()
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         description = request.form.get("description", "").strip()
-        collection_id = request.form.get("collection_id")
+        collection_id = request.form.get("collection_id", type=int)
         status = request.form.get("status")
 
         if not name:
