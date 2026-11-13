@@ -17,6 +17,7 @@
     <h1>{{ current_user.username }}'s Project Library</h1>
 
     <p><a href="{{ url_for('auth.logout') }}">Logout</a></p>
+    <p><a href="{{ url_for('auth.create_project') }}">Create New Project</a></p>
 
     {% for collection in collections %}
         <section>
