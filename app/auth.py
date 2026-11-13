@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, current_user, logout_user
 from sqlalchemy.exc import IntegrityError
 
@@ -94,5 +94,55 @@ def library():
     return render_template(
         "library.html",
         projects=projects,
+        collections=collections
+    )
+
+@auth.route("/projects/new", methods=["GET", "POST"])
+@login_required
+def create_project():
+    collections = Collection.querry.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        description = request.form.get("description", "").strip()
+        collection_id = request.form.get("collection_id")
+        status = request.form.get("status")
+
+        if not name:
+            flash("Project name is required.", "error")
+            return redirect(url_for("auth.create_project"))
+
+        collection = Collection.query.filter_by(
+            id=collection_id,
+            user_id=current_user.id
+        ).first()
+
+        if collection is None:
+            abort(404)
+
+        valid_statuses = ["idea", "active", "paused", "completed"]
+
+        if status not in valid_statuses:
+            flash("Please select a valid project status.", "error")
+            return redirect(url_for("auth.create_project"))
+
+        project = Project(
+            name=name,
+            description=description or None,
+            status=status,
+            user_id=current_user.id,
+            collection_id=collection.id
+        )
+
+        db.session.add(project)
+        db. session.commit()
+
+        flash("Project created successfully!", "success")
+        return redirect(url_for("auth.library"))
+
+    return render_template(
+        "create_project.html",
         collections=collections
     )
