@@ -269,3 +269,44 @@ def create_collection():
         return redirect(url_for("auth.library"))
 
     return render_template("create_collection.html")
+
+@auth.route("/collections/<int:collection_id>/edit", methods=["GET", "POST"])
+@login_required
+def edit_collection(collection_id):
+    collection = Collection.query.filter_by(
+        id=collection_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    if collection.is_default:
+        flash("The default collection cannot be renamed.", "error")
+        return redirect(url_for("auth.library"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+
+        if not name:
+            flash("Collection name is required", "error")
+            return redirect(url_for(
+                "auth.edit_collection", collection_id=collection.id
+            ))
+
+        existing = Collection.query.filter(
+            Collection.user_id == current_user.id,
+            Collection.name == name,
+            Collection.id != collection.id
+        ).first()
+
+        if existing:
+            flash("You already have a collection with that name.", "error")
+            return redirect(url_for(
+                "auth.edit_collection", collection_id=collection.id
+            ))
+
+        collection.name = name
+        db.session.commit()
+
+        flash("Collection renamed successfully!", "success")
+        return redirect(url_for("auth.library"))
+
+    return render_template("edit_collection.html", collection=collection)
