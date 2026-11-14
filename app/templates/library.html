@@ -78,7 +78,18 @@
                         </div>
 
                         {% if project.description %}
-                            <p>{{ project.description }}</p>
+                            <div class="description-container">
+                                <p class="project-description">
+                                    {{ project.description }}
+                                </p>
+
+                                <button
+                                    type="button"
+                                    class="description-toggle"
+                                    onclick="toggleDescription(this)">
+                                    Read more
+                                </button>
+                            </div>    
                         {% else %}
                             <p class="muted-text">No description provided.</p>
                         {% endif %}

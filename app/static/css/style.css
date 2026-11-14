@@ -263,6 +263,32 @@ h1 {
     color: #9299a5 !important;
 }
 
+.project-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+}
+
+.project-description.expanded {
+    display: block;
+}
+
+.description-toggle {
+    margin-top: 6px;
+    padding: 0;
+    background: none;
+    color: #315ea8;
+    font-size: 0.85rem;
+}
+
+.description-toggle:hover {
+    background: none;
+    text-decoration: underline;
+}
+
 /* Status labels */
 .status {
     flex-shrink: 0;
