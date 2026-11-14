@@ -67,10 +67,13 @@
         {% if collection_projects %}
             <div class="project-grid">
                 {% for project in collection_projects %}
-                    <a class="project-card"
-                        href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+                    <div class="project-card">
                         <div class="project-card-heading">
-                            <h4>{{ project.name }}</h4>
+                            <h4>
+                                <a href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+                                    {{ project.name }}
+                                </a>
+                            </h4>
 
                             <span class="status status-{{ project.status }}">
                                 {{ project.status | title }}
@@ -93,7 +96,7 @@
                         {% else %}
                             <p class="muted-text">No description provided.</p>
                         {% endif %}
-                    </a>
+                    </div>
                 {% endfor %}
             </div>
         {% else %}

@@ -226,12 +226,10 @@ h1 {
 }
 
 .project-card {
-    display: block;
     padding: 16px;
     border: 1px solid #e1e4e8;
     border-radius: 6px;
-    color: inherit;
-    text-decoration: none;
+    background-color: white;
     transition: border-color 0.15s, box-shadow 0.15s;
 }
 
@@ -250,6 +248,15 @@ h1 {
 .project-card h4 {
     margin: 0;
     font-size: 1rem;
+}
+
+.project-card h4 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.project-card h4 a:hover {
+    color: #315ea8;
 }
 
 .project-card p {
