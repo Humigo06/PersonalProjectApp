@@ -22,8 +22,8 @@ def register():
             return redirect(url_for("auth.register"))
 
         if len(password) < 8:
-            flash("Password must be at least 8 characters." "error")
-            return redirect(url_for("auth.register"))
+            flash("Password must be at least 8 characters.", "error")
+            return render_template("register.html")
 
         # Create the new user
         user = User(username=username, email=email)
@@ -44,7 +44,7 @@ def register():
         except IntegrityError:
             db.session.rollback()
             flash("That username or email is already in use.", "error")
-            return redirect(url_for("auth.register"))
+            return render_template("register.html")
 
         # Log in the newly registed user
         login_user(user)
@@ -65,7 +65,7 @@ def login():
 
         if user is None or not user.check_password(password):
             flash("Invalid username or password.", "error")
-            return redirect(url_for("auth.login"))
+            return render_template("login.html")
 
         login_user(user)
 
