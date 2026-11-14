@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Project Hub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar">
+            <a class="brand" href="{{ url_for('auth.library') }}">
+                Project Hub
+            </a>
+
+            {% if current_user.is_authenticated %}
+                <div class="nav-links">
+                    <a href="{{ url_for('auth.library') }}">My Library</a>
+                    <a href="{{ url_for('auth.create_project') }}">New Projects</a>
+                    <a href="{{ url_for('auth.logout') }}">Log Out</a>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
