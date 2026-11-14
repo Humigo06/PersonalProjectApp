@@ -415,6 +415,98 @@ h1 {
     overflow-wrap: anywhere;
 }
 
+/* Project forms */
+.form-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.form-heading {
+    margin-bottom: 28px;
+}
+
+.form-heading h1 {
+    margin-bottom: 4px;
+}
+
+.project-form {
+    padding: 28px;
+    background-color: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 7px;
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d5d9e0;
+    border-radius: 5px;
+    background-color: white;
+    color: #252a34;
+    font-size: 0.95rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #315ea8;
+    box-shadow: 0 0 0 2px rgba(49, 94, 168, 0.12);
+}
+
+.field-hint {
+    margin: 0;
+    color: #9299a5;
+    font-size: 0.85rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 18px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding-top: 8px;
+}
+
+.button-secondary {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #d5d9e0;
+    border-radius: 5px;
+    color: #555d6b;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.button-secondary:hover {
+    background-color: #f4f6f8;
+}
+
 /* Small screens */
 @media (max-width: 650px) {
     .page-heading {
@@ -456,5 +548,14 @@ h1 {
 
     .detail-actions {
         flex-wrap: wrap;
+    }
+
+    .project-form {
+        padding: 20px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
     }
 }
