@@ -34,7 +34,7 @@
             <label for="description">Description</label>
             <textarea
                 id="description"
-                name="desccription"
+                name="description"
                 rows="5"
                 placeholder="What is this project about?"
             >{{ request.form.get('description', project.description or '') }}</textarea>
@@ -49,7 +49,7 @@
                         <option
                             value="{{ collection.id }}"
                             {% if request.form.get('collection_id', project.collection_id|string) == collection.id|string %}
-                            selected
+                                selected
                             {% endif %}
                         >
                             {{ collection.name }}

@@ -174,7 +174,7 @@ def edit_project(project_id):
 
     if request.method == "POST":
         name = request.form.get("name", "").strip()
-        description = request.form.get("description", "").strip()
+        description = request.form.get("description", "")
         collection_id = request.form.get("collection_id", type=int)
         status = request.form.get("status")
 
