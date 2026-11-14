@@ -338,6 +338,83 @@ h1 {
     color: #697386;
 }
 
+/* Project details page */
+.project-detail {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #697386;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #315ea8;
+}
+
+.detail-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.detail-heading h1 {
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+.detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #697386;
+    font-size: 0.9rem;
+}
+
+.detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.detail-actions form {
+    margin: 0;
+}
+
+.button-danger {
+    background-color: #fceaea;
+    color: #a12b2b;
+}
+
+.button-danger:hover {
+    background-color: #f6d5d5;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+    padding: 24px;
+    background-color: white;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+}
+
+.detail-section h2 {
+    margin: 0 0 16px;
+    font-size: 1.2rem;
+}
+
+.detail-description {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 /* Small screens */
 @media (max-width: 650px) {
     .page-heading {
@@ -371,5 +448,13 @@ h1 {
     .nav-links {
         flex-wrap: wrap;
         gap: 16px;
+    }
+
+    .detail-heading {
+        flex-direction: column;
+    }
+
+    .detail-actions {
+        flex-wrap: wrap;
     }
 }
