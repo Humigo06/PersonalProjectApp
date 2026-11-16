@@ -1,89 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit {{ project.name }} - Project Tracker</title>
-</head>
-<body>
-    <h1>Edit Project</h1>
+{% extends "base.html" %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-                {{ message }}
+{% block title %}Edit {{ project.name }} | Project Hub{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <a class="back-link"
+        href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+        &larr; Back to Project
+    </a>
+
+    <div class="form-heading">
+        <h1>Edit Project</h1>
+        <p class="page-description">
+            Update your project's information.
+        </p>
+    </div>
+
+    <form method="POST" class="project-form">
+        <div class="form-group">
+            <label for="name">Project Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                maxlength="150"
+                value="{{ request.form.get('name', project.name) }}"
+                placeholder="Enter a project name"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                name="description"
+                rows="5"
+                placeholder="What is this project about?"
+            >{{ request.form.get('description', project.description or '') }}</textarea>
+            <p class="field-hint">Optional. You can update this whenever you like.</p>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="collection_id">Collection</label>
+                <select id="collection_id" name="collection_id" required>
+                    {% for collection in collections %}
+                        <option
+                            value="{{ collection.id }}"
+                            {% if request.form.get('collection_id', project.collection_id|string) == collection.id|string %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ collection.name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-        {% endfor %}
-    {% endwith %}
 
-    <form method="POST">
-        <label for="name">Project Name:</label>
-        <input
-            type="text"
-            id="name"
-            name="name"
-            value="{{ project.name }}"
-            required
-        >
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" required>
+                    {% for status in ['idea', 'active', 'paused', 'completed'] %}
+                        <option
+                            value="{{ status }}"
+                            {% if request.form.get('status', project.status) == status %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ status | title }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-        <br><br>
-
-        <label for="description">Description:</label>
-        <textarea
-            id="description"
-            name="description"
-        >{{ project.description or '' }}</textarea>
-    
-        <br><br>
-
-        <label for="collection_id">Collection:</label>
-        <select id="collection_id" name="collection_id" required>
-            {% for collection in collections %}
-                <option
-                    value="{{ collection.id }}"
-                    {% if collection.id == project.collection_id %}
-                        selected
-                    {% endif %}
-                >
-                    {{ collection.name }}
-                </option>
-            {% endfor %}
-        </select>
-
-        <br><br>
-
-        <label for="status">Status:</label>
-        <select id="status" name="status" required>
-            <option value="idea"
-                {% if project.status == "idea" %}selected{% endif %}>
-                Idea
-            </option>
-
-            <option value="active"
-                {% if project.status == "active" %}selected{% endif %}>
-                Active
-            </option>
-
-            <option value="paused"
-                {% if project.status == "paused" %}selected{% endif %}>
-                Paused
-            </option>
-
-            <option value="completed"
-                {% if project.status == "completed" %}selected{% endif %}>
-                Completed
-            </option>
-        </select>
-        
-        <br><br>
-
-        <button type="submit">Save Changes</button>
+        <div class="form-actions">
+            <a class="button-secondary"
+                href="{{ url_for('auth.project_detail', project_id=project.id) }}">
+                Cancel
+            </a>
+            <button type="submit">Save Changes</button>
+        </div>
     </form>
-
-    <p>
-        <a href="{{ url_for('auth.project_detail', project_id=project.id) }}">
-            Cancel
-        </a>
-    </p>
-</body>
-</html>
+</div>
+{% endblock %}

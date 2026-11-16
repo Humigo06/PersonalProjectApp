@@ -1,33 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rename Collection</title>
-</head>
-<body>
-    <h1>Rename Collection</h1>
+{% extends "base.html" %}
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endwith %}
+{% block title %}Rename Collection | Project Hub{% endblock %}
 
-    <form method="POST">
-        <label for="name">Collection Name:</label>
-        <input
-            type="text"
-            id="name"
-            name="name"
-            value="{{ collection.name }}"
-            maxlength="100"
-            required
-        >
+{% block content %}
+<div class="form-page">
+    <a class="back-link" href="{{ url_for('auth.library') }}">
+        &larr; Back to Library
+    </a>
 
-        <button type="submit">Save Changes</button>
+    <div class="form-heading">
+        <h1>Rename Collection</h1>
+        <p class="page-description">
+            Change the name of "{{ collection.name }}".
+        </p>
+    </div>
+
+    <form method="POST" class="project-form">
+        <div class="form-group">
+            <label for="name">Collection Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                maxlength="100"
+                value="{{ request.form.get('name', collection.name) }}"
+                placeholder="Enter a collection name"
+                required
+            >
+        </div>
+
+        <div class="form-actions">
+            <a class="button-secondary" href="{{ url_for('auth.library') }}">
+                Cancel
+            </a>
+            <button type="submit">Save Changes</button>
+        </div>
     </form>
-
-    <a href="{{ url_for('auth.library') }}">Cancel</a>
-</body>
-</html>
+</div>
+{% endblock %}
