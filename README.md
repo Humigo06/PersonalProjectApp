@@ -1,15 +1,88 @@
 # Personal Project App
-An app for managing and organizing personal projects
 
-## What Is This App?
-This app is a personal project manager. Unlike the many project trackers that encourage deadlines, tasks, goals, and step-by-step project management, this application aims to provide a central hub for personal projects. This app enables users to organize their projects, differentiate between projects and ideas, allow for easy access to various project resources, and view a progress timeline for each project.
+Personal Project App is a small, private library for keeping track of personal projects and ideas. Instead of imposing task lists and deadlines, it gives each project a place for a description and status, and lets you group projects into collections. This makes it easier to keep ideas and ongoing work organized in one place.
 
-## Planned Technology Stack
-- Frontend: HTML, CSS, and JavaScript
-- Backend: Python and Flask
-- Database: PostgreSQL
-- Deployment: Google Cloud Run
-- Additional tools: LLMs for code assistance
+## MVP features
 
-## AI Usage
-AI was used to write the Dockerfile, compose.yaml, among the other files used for inital set up. The database tables in models.py were created with AI guidance as well.
+- Create an account and log in.
+- View your projects grouped by collection.
+- Create, edit, and delete projects. Each project has a name, optional description, collection, and status: Idea, Active, Paused, or Completed.
+- Create, rename, and delete collections. Each account starts with a **General** collection.
+- View a project's details.
+
+Search and filtering, project links, and progress updates are not available in the current MVP.
+
+## Technology stack
+
+- **Application:** Python 3.12 and Flask
+- **Data and migrations:** PostgreSQL 17, Flask-SQLAlchemy / SQLAlchemy, Flask-Migrate / Alembic, and Psycopg 3
+- **Authentication:** Flask-Login and Werkzeug password hashing
+- **Web interface:** Flask/Jinja templates, HTML, and CSS
+- **Local development:** Docker, Docker Compose, and the Python slim Docker image
+- **External APIs:** None
+
+## Installation
+
+### Prerequisites
+
+- Git
+- Docker Desktop with Docker Compose
+
+1. Clone the repository and enter its directory:
+
+   ```sh
+   git clone https://github.com/Humigo06/PersonalProjectApp.git
+   cd PersonalProjectApp
+   ```
+
+2. Create a `.env` file in the project root with PostgreSQL credentials and a Flask secret key:
+
+   ```dotenv
+   POSTGRES_DB=personal_project_app
+   POSTGRES_USER=project_user
+   POSTGRES_PASSWORD=replace_with_a_local_password
+   SECRET_KEY=replace_with_a_long_random_secret
+   ```
+
+   Use a strong, unique `SECRET_KEY`. You can generate one with Python:
+
+   ```sh
+   python -c "import secrets; print(secrets.token_hex(32))"
+   ```
+
+   The password above is a placeholder; replace it with a local development password. Do not commit `.env` or use development credentials in a deployed environment.
+
+3. Build and start the application and database:
+
+   ```sh
+   docker compose up --build -d
+   ```
+
+4. Apply the database migrations:
+
+   ```sh
+   docker compose exec web flask --app app:create_app db upgrade
+   ```
+
+5. Open [http://localhost:5000/register](http://localhost:5000/register) to create an account. The application is also available at [http://localhost:5000/login](http://localhost:5000/login) after setup.
+
+To stop the containers, run `docker compose down`. To also remove the local PostgreSQL data volume and its contents, run `docker compose down --volumes`.
+
+## Usage examples
+
+### Organize projects
+
+1. Register at `/register`; registration signs you in and opens your library.
+2. Select **+ New Collection** and give the collection a name, such as `Side Projects`.
+3. Select **+ New Project**. Enter a project name, optionally add a description, choose a collection, and select a status.
+4. Save the project. It appears in your library under the selected collection.
+
+### Update or remove a project
+
+1. Select a project name in your library to open its details.
+2. Select **Edit Project** to change its name, description, collection, or status.
+3. To remove it, select **Delete Project** and confirm.
+
+### Manage collections
+
+Create collections from your library and use **Rename** or **Delete** beside a collection to manage it. The default **General** collection cannot be renamed or deleted, and a collection must be empty before it can be deleted.
