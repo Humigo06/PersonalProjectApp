@@ -18,5 +18,5 @@ COPY . .
 # Document the port Flask uses
 EXPOSE 5000
 
-# Start the Flask application
-CMD ["flask", "--app", "app:create_app", "run", "--host=0.0.0.0", "--port=5000"]
+# Start the application
+CMD exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 8 "app:create_app()"
