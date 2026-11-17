@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Document the port Flask uses
-EXPOSE 5000
+EXPOSE 8080
 
 # Start the application
 CMD exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 8 "app:create_app()"
